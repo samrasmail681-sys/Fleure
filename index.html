@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عالم الورد ومستلزمات العرايس 💐</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #fdf2f8;
+        }
+        .modal {
+            transition: opacity 0.25s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- Header Section -->
+    <div>
+        <header class="bg-gradient-to-r from-pink-500 via-rose-500 to-red-400 text-white shadow-md sticky top-0 z-40">
+            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                <div class="flex items-center space-x-3 space-x-reverse">
+                    <span class="text-3xl">💐</span>
+                    <div>
+                        <h1 class="text-2xl font-extrabold tracking-wide">عالم الورد ومستلزمات العرايس</h1>
+                        <p class="text-xs text-pink-100 font-light">أجمل البوكيهات والتجهيزات لأحلى عروسة</p>
+                    </div>
+                </div>
+                <!-- Button to Open Admin Panel -->
+                <button onclick="checkAdminPassword()" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-full text-sm font-semibold transition backdrop-blur-sm flex items-center gap-2 border border-white/30 shadow-sm">
+                    <i class="fa-solid fa-lock"></i>
+                    <span>لوحة التحكم</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Banner / Hero Section -->
+        <section class="bg-pink-100/60 border-b border-pink-200 py-6 px-4 text-center">
+            <div class="max-w-xl mx-auto">
+                <h2 class="text-xl font-bold text-pink-800 mb-2">أهلاً بكم في متجرنا ✨</h2>
+                <p class="text-sm text-gray-600">اختر المنتج المناسب واضغط على زر الطلب للتواصل المباشر معنا عبر الواتساب لتأكيد الطلب والتفاصيل.</p>
+            </div>
+        </section>
+
+        <!-- Main Products Container -->
+        <main class="container mx-auto px-4 py-8">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-bold text-gray-800 border-r-4 border-pink-500 pr-3">أحدث المنتجات المعروضة</h3>
+                <span id="product-count" class="bg-pink-100 text-pink-700 text-xs font-bold px-3 py-1 rounded-full">0 منتجات</span>
+            </div>
+
+            <!-- Products Grid -->
+            <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Products will be dynamically inserted here -->
+            </div>
+
+            <!-- Empty State Message -->
+            <div id="empty-state" class="hidden text-center py-16 bg-white rounded-2xl shadow-sm border border-pink-100 max-w-md mx-auto my-8">
+                <div class="w-20 h-20 bg-pink-50 text-pink-400 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                    <i class="fa-solid fa-store-slash"></i>
+                </div>
+                <h4 class="text-lg font-bold text-gray-700 mb-1">لا توجد منتجات معروضة حالياً</h4>
+                <p class="text-sm text-gray-500 mb-4 px-6">يمكن صاحب المتجر إضافة منتجات جديدة من خلال الضغط على لوحة التحكم أعلاه.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 text-center py-6 border-t border-gray-700 text-sm mt-12">
+        <p class="mb-2">جميع الحقوق محفوظة © متجر الورد ومستلزمات العرايس</p>
+        <p class="text-xs text-gray-500">للطلب والاستفسار المباشر: <span class="text-pink-400 font-bold" dir="ltr">01558074386</span></p>
+    </footer>
+
+    <!-- Admin Panel Modal -->
+    <div id="admin-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 modal">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            
+            <!-- Modal Header -->
+            <div class="bg-pink-600 text-white px-6 py-4 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-xl"></i>
+                    <h3 class="font-bold text-lg">لوحة إشراف المتجر (إضافة وتعديل المنتجات)</h3>
+                </div>
+                <button onclick="closeAdminModal()" class="text-white/80 hover:text-white text-xl">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content (Scrollable) -->
+            <div class="p-6 overflow-y-auto space-y-6">
+                
+                <!-- Add Product Form -->
+                <form id="add-product-form" onsubmit="handleSaveProduct(event)" class="bg-pink-50/50 p-4 rounded-xl border border-pink-200 space-y-4">
+                    <h4 id="form-title" class="font-bold text-pink-800 border-b border-pink-200 pb-2 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-plus-circle"></i>
+                        <span>إضافة منتج جديد</span>
+                    </h4>
+
+                    <input type="hidden" id="edit-index" value="-1">
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">اسم المنتج / البوكيه</label>
+                            <input type="text" id="prod-title" required placeholder="مثال: بوكيه ورد أحمر بلدي" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">السعر (بالجنيه)</label>
+                            <input type="number" id="prod-price" required placeholder="مثال: 350" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500">
+                        </div>
+                    </div>
+
+                    <!-- Image Input Choice -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">صورة المنتج</label>
+                        <div class="flex items-center gap-3 mb-2">
+                            <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer">
+                                <input type="radio" name="img-source" value="file" checked onclick="toggleImageInput('file')"> رفع من الجهاز
+                            </label>
+                            <label class="flex items-center gap-1 text-xs text-gray-600 cursor-pointer">
+                                <input type="radio" name="img-source" value="url" onclick="toggleImageInput('url')"> رابط صورة إلكتروني
+                            </label>
+                        </div>
+
+                        <!-- File Input -->
+                        <div id="file-input-container">
+                            <input type="file" id="prod-file" accept="image/*" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-pink-100 file:text-pink-700 hover:file:bg-pink-200">
+                        </div>
+
+                        <!-- URL Input -->
+                        <div id="url-input-container" class="hidden">
+                            <input type="url" id="prod-url" placeholder="https://example.com/image.jpg" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500">
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button type="submit" class="flex-1 bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition shadow-sm">
+                            حفظ المنتج ونشره
+                        </button>
+                        <button type="button" onclick="resetForm()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg text-sm transition">
+                            إلغاء
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Admin Existing Products Table -->
+                <div>
+                    <h4 class="font-bold text-gray-800 mb-3 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-list"></i>
+                        <span>المنتجات الحالية للتحكم بها (تعديل / حذف)</span>
+                    </h4>
+                    
+                    <div class="border rounded-xl overflow-hidden border-gray-200">
+                        <table class="w-full text-sm text-right text-gray-600">
+                            <thead class="bg-gray-100 text-gray-700 text-xs uppercase font-bold border-b">
+                                <tr>
+                                    <th class="p-3">الصورة</th>
+                                    <th class="p-3">اسم المنتج</th>
+                                    <th class="p-3">السعر</th>
+                                    <th class="p-3 text-center">إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-products-table" class="divide-y divide-gray-200 bg-white">
+                                <!-- Dynamic rows inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="bg-gray-50 px-6 py-3 border-t flex justify-between items-center text-xs text-gray-500">
+                <span>رمز الأمان الحالي: <b class="text-pink-600">1234</b></span>
+                <button onclick="closeAdminModal()" class="bg-gray-700 hover:bg-gray-800 text-white font-bold px-4 py-1.5 rounded-lg transition">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script>
+        // WhatsApp Phone Number
+        const WHATSAPP_PHONE = "+201558047386";
+        
+        // Storage Key
+        const STORAGE_KEY = "bride_flowers_products";
+
+        // Admin Password
+        const ADMIN_PASS = "2609";
+
+        // Default Sample Data if Empty
+        const defaultProducts = [
+            {
+                title: "بوكيه ورد بلدي فاخر",
+                price: "450",
+                image: "https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                title: "طوق ورد مع تاج عروسة",
+                price: "250",
+                image: "https://images.unsplash.com/photo-1535254973040-607b474cb50d?auto=format&fit=crop&w=600&q=80"
+            }
+        ];
+
+        // Load Products from Local Storage
+        function getProducts() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            if (!data) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultProducts));
+                return defaultProducts;
+            }
+            return JSON.parse(data);
+        }
+
+        // Save Products to Local Storage
+        function saveProducts(products) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+            renderDisplay();
+        }
+
+        // Main Render Function for Visitor Grid
+        function renderDisplay() {
+            const products = getProducts();
+            const grid = document.getElementById('products-grid');
+            const emptyState = document.getElementById('empty-state');
+            const countLabel = document.getElementById('product-count');
+
+            countLabel.textContent = `${products.length} منتجات`;
+            grid.innerHTML = '';
+
+            if (products.length === 0) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                
+                products.forEach((prod, index) => {
+                    const message = encodeURIComponent(`أهلاً بك، حابة أطلب منتج (${prod.title}) بسعر ${prod.price} جنيه. هل متاح؟`);
+                    const waUrl = `https://wa.me/${WHATSAPP_PHONE}?text=${message}`;
+
+                    grid.innerHTML += `
+                        <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition border border-pink-100 overflow-hidden flex flex-col justify-between group">
+                            <div>
+                                <div class="relative h-56 bg-gray-100 overflow-hidden">
+                                    <img src="${prod.image}" alt="${prod.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='https://via.placeholder.com/400x300?text=صورة+غير+متاحة'">
+                                    <div class="absolute top-3 left-3 bg-pink-600 text-white text-xs font-extrabold px-3 py-1 rounded-full shadow-sm">
+                                        ${prod.price} ج.م
+                                    </div>
+                                </div>
+                                <div class="p-4">
+                                    <h4 class="font-bold text-gray-800 text-base mb-1 line-clamp-1">${prod.title}</h4>
+                                    <p class="text-xs text-gray-500 mb-2">مستلزمات عرايس وورد طبيعي/صناعي</p>
+                                </div>
+                            </div>
+                            <div class="p-4 pt-0">
+                                <a href="${waUrl}" target="_blank" class="w-full bg-green-500 hover:bg-green-600 text-white text-sm font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition shadow-sm hover:shadow">
+                                    <i class="fa-brands fa-whatsapp text-lg"></i>
+                                    <span>طلب عبر الواتساب</span>
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            renderAdminTable();
+        }
+
+        // Render Products in Admin Modal Table
+        function renderAdminTable() {
+            const products = getProducts();
+            const tableBody = document.getElementById('admin-products-table');
+            tableBody.innerHTML = '';
+
+            if (products.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="4" class="text-center p-4 text-gray-400">لا توجد منتجات حالياً.</td></tr>`;
+                return;
+            }
+
+            products.forEach((prod, index) => {
+                tableBody.innerHTML += `
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-3">
+                            <img src="${prod.image}" class="w-12 h-12 rounded-lg object-cover border border-gray-200">
+                        </td>
+                        <td class="p-3 font-semibold text-gray-800">${prod.title}</td>
+                        <td class="p-3 text-pink-600 font-bold">${prod.price} ج.م</td>
+                        <td class="p-3 text-center space-x-2 space-x-reverse">
+                            <button onclick="editProduct(${index})" class="text-blue-600 hover:text-blue-800 p-1.5 rounded-lg hover:bg-blue-50">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                            <button onclick="deleteProduct(${index})" class="text-red-600 hover:text-red-800 p-1.5 rounded-lg hover:bg-red-50">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Toggle file vs url input
+        function toggleImageInput(type) {
+            const fileBox = document.getElementById('file-input-container');
+            const urlBox = document.getElementById('url-input-container');
+
+            if (type === 'file') {
+                fileBox.classList.remove('hidden');
+                urlBox.classList.add('hidden');
+            } else {
+                fileBox.classList.add('hidden');
+                urlBox.classList.remove('hidden');
+            }
+        }
+
+        // Admin Security Check
+        function checkAdminPassword() {
+            const pass = prompt("برجاء أدخل كلمة السر للدخول إلى لوحة التحكم:");
+            if (pass === ADMIN_PASS) {
+                document.getElementById('admin-modal').classList.remove('hidden');
+            } else if (pass !== null) {
+                alert("كلمة السر غير صحيحة!");
+            }
+        }
+
+        function closeAdminModal() {
+            document.getElementById('admin-modal').classList.add('hidden');
+            resetForm();
+        }
+
+        // Save or Edit Product
+        function handleSaveProduct(e) {
+            e.preventDefault();
+            const editIndex = parseInt(document.getElementById('edit-index').value);
+            const title = document.getElementById('prod-title').value.trim();
+            const price = document.getElementById('prod-price').value.trim();
+            const imgSource = document.querySelector('input[name="img-source"]:checked').value;
+
+            const fileInput = document.getElementById('prod-file');
+            const urlInput = document.getElementById('prod-url');
+
+            let image = "";
+
+            if (imgSource === 'url') {
+                image = urlInput.value.trim() || 'https://via.placeholder.com/400x300';
+                commitProductSave(title, price, image, editIndex);
+            } else {
+                if (fileInput.files && fileInput.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        image = e.target.result;
+                        commitProductSave(title, price, image, editIndex);
+                    };
+                    reader.readAsDataURL(fileInput.files[0]);
+                } else {
+                    if (editIndex !== -1) {
+                        const existingProducts = getProducts();
+                        image = existingProducts[editIndex].image;
+                        commitProductSave(title, price, image, editIndex);
+                    } else {
+                        alert("برجاء اختيار صورة من جهازك أولاً.");
+                    }
+                }
+            }
+        }
+
+        function commitProductSave(title, price, image, editIndex) {
+            const products = getProducts();
+            
+            if (editIndex === -1) {
+                // New Product
+                products.unshift({ title, price, image });
+            } else {
+                // Update Product
+                products[editIndex] = { title, price, image };
+            }
+
+            saveProducts(products);
+            resetForm();
+            alert("تم حفظ المنتجات بنجاح في الموقع!");
+        }
+
+        // Edit Product Handler
+        function editProduct(index) {
+            const products = getProducts();
+            const prod = products[index];
+
+            document.getElementById('edit-index').value = index;
+            document.getElementById('prod-title').value = prod.title;
+            document.getElementById('prod-price').value = prod.price;
+
+            document.getElementById('form-title').innerHTML = `
+                <i class="fa-solid fa-pen"></i>
+                <span>تعديل المنتج (${prod.title})</span>
+            `;
+
+            // Default to URL option for preview
+            document.querySelector('input[value="url"]').checked = true;
+            toggleImageInput('url');
+            document.getElementById('prod-url').value = prod.image;
+        }
+
+        // Delete Product
+        function deleteProduct(index) {
+            if (confirm("هل أنت تأكد من مسح هذا المنتج؟")) {
+                const products = getProducts();
+                products.splice(index, 1);
+                saveProducts(products);
+            }
+        }
+
+        // Reset Form
+        function resetForm() {
+            document.getElementById('add-product-form').reset();
+            document.getElementById('edit-index').value = "-1";
+            document.getElementById('form-title').innerHTML = `
+                <i class="fa-solid fa-plus-circle"></i>
+                <span>إضافة منتج جديد</span>
+            `;
+            toggleImageInput('file');
+            document.querySelector('input[value="file"]').checked = true;
+        }
+
+        // On Page Load
+        window.onload = function() {
+            renderDisplay();
+        };
+    </script>
+</body>
+</html>
